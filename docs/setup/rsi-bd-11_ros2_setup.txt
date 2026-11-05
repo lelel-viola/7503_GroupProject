@@ -1,0 +1,59 @@
+rsi-bd-11 ROS 2 Jazzy 安装命令
+生成日期：2026-10-18
+用途：为 MS200 雷达驱动准备 ROS 2 Jazzy 和编译工具
+
+【使用方法】
+1. 在 Cursor 的远程终端（树莓派，左下角显示 SSH: 192.168.3.18）里执行。
+2. 复制“第 1 段”整段粘贴执行，输入一次 sudo 密码。下载量约 1-2GB，建议插网线。
+3. 等命令提示符回来、没有红色报错后，执行“第 2 段”验证。
+4. 第 2 段输出 ROS_DISTRO=jazzy 后，告诉 Claude“ROS 装好了”。
+5. 第 3 段现在不要执行，等 Claude 把雷达驱动 clone 下来后会通知你。
+
+============================================================
+第 1 段：安装 ROS 2 Jazzy + 编译工具（需要 sudo 密码）
+============================================================
+
+sudo apt update
+sudo apt install -y software-properties-common wget
+sudo add-apt-repository -y universe
+sudo wget -qO /usr/share/keyrings/ros-archive-keyring.gpg https://raw.githubusercontent.com/ros/rosdistro/master/ros.key
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+sudo apt update
+sudo apt install -y ros-jazzy-desktop
+sudo apt install -y build-essential cmake git python3-colcon-common-extensions
+
+============================================================
+第 2 段：验证（不需要 sudo）
+============================================================
+
+source /opt/ros/jazzy/setup.bash
+echo $ROS_DISTRO
+command -v ros2
+command -v colcon
+git --version
+
+期望输出：
+jazzy
+/opt/ros/jazzy/bin/ros2
+/usr/bin/colcon
+git version 2.x.x
+
+============================================================
+第 3 段：安装雷达 udev 规则（等 Claude 通知后再执行）
+============================================================
+
+sudo cp ~/lidar_ros_ws/src/oradar_ros/oradar.rules /etc/udev/rules.d/99-oradar.rules
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+ls -l /dev/oradar
+
+期望输出：/dev/oradar -> ttyACM0 的软链接。
+
+============================================================
+常见问题
+============================================================
+
+- apt 报 "Could not resolve packages.ros.org"：先确认树莓派能上网，重跑 sudo apt update。
+- ros-jazzy-desktop 下载慢：arm64 安装包约 1-2GB，属正常；插网线会快很多。
+- sudo 密码输错：按 Ctrl+C，重新执行第 1 段。
+- 其他报错：把完整输出发给 Claude。

@@ -1,0 +1,27 @@
+amcl:
+  ros__parameters:
+    use_sim_time: True  # 启用仿真时间（必须与 Gazebo 一致）
+    alpha1: 0.2
+    alpha2: 0.2
+    alpha3: 0.2
+    alpha4: 0.2
+    alpha5: 0.2
+    base_frame_id: "base_link"  # 与 TurtleBot3 仿真一致
+    global_frame_id: "map"      # 全局坐标系（Gazebo 地图坐标系）
+    odom_frame_id: "odom"       # 里程计坐标系（仿真自带）
+    laser_topic: "/scan"        # 仿真雷达话题（与 Gazebo 一致）
+    laser_max_range: 3.5        # TurtleBot3 仿真雷达最大范围
+    laser_min_range: 0.12
+    max_beams: 360              # 仿真雷达点数（360 点）
+    max_particles: 2000
+    min_particles: 500
+    laser_model_type: "likelihood_field"
+    update_min_a: 0.2
+    update_min_d: 0.2
+    transform_tolerance: 0.2
+    initial_pose_x: 0.0         # 初始位置（与 Gazebo 小车初始位置匹配）
+    initial_pose_y: 0.0
+    initial_pose_a: 0.0
+    initial_cov_xx: 0.1
+    initial_cov_yy: 0.1
+    initial_cov_aa: 0.05

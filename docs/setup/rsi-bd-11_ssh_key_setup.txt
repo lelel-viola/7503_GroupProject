@@ -1,0 +1,28 @@
+rsi-bd-11 SSH 公钥安装命令
+生成日期：2026-10-18
+用途：让笔记本上的 Claude Code 通过 SSH 直接登录树莓派
+
+【重要】
+1. 以下命令必须在树莓派的终端里执行（Cursor 左下角显示 SSH: 192.168.3.18 的那个终端），不要粘到 Windows 的 PowerShell。
+2. 只需要先执行第 1 段。执行完告诉 Claude“装好了”，后续检查由 Claude 通过 SSH 完成。
+3. 公钥不是密码，可以放心复制；私钥保存在笔记本 C:/Workplace/.ai-ssh/，不会外发。
+
+============================================================
+第 1 段：安装公钥（复制下面这一整行，只需执行一次）
+============================================================
+
+mkdir -p ~/.ssh && chmod 700 ~/.ssh && (grep -qxF 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP5Z+vsJd3oLkySSWVv5jJBG7bPhZ5FRyfCcNT5DMLHD claude-code-laptop-to-rsi-bd-11' ~/.ssh/authorized_keys 2>/dev/null || echo 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP5Z+vsJd3oLkySSWVv5jJBG7bPhZ5FRyfCcNT5DMLHD claude-code-laptop-to-rsi-bd-11' >> ~/.ssh/authorized_keys) && chmod 600 ~/.ssh/authorized_keys
+
+============================================================
+第 2 段：自检（可选，执行完把输出发给 Claude）
+============================================================
+
+hostname; whoami; groups
+
+============================================================
+撤销方法（以后想取消 Claude 的免密登录时）
+============================================================
+
+sed -i '/claude-code-laptop-to-rsi-bd-11/d' ~/.ssh/authorized_keys
+
+说明：这只删掉公钥那一行，不影响你的密码登录，也不影响 Cursor 现有的连接。
